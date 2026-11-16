@@ -24,7 +24,7 @@ function speakerNames(members: Member[]): string {
 
 // Discord rejects webhook names over 80 chars or containing "discord"
 export function webhookName(members: Member[], tag: string | null): string {
-    const suffix = tag ? ` ${tag}` : "";
+    const suffix = tag ? ` ~ ${tag}` : "";
     const names = speakerNames(members).slice(0, webhookNameLimit - suffix.length);
 
     return `${names}${suffix}`

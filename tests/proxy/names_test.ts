@@ -34,7 +34,7 @@ Deno.test("system tag goes on the end and always survives", () => {
     const name = webhookName([longName], "TAG");
 
     assertEquals(name.length, 80);
-    assertEquals(name.endsWith(" TAG"), true);
+    assertEquals(name.endsWith(" ~ TAG"), true);
 });
 
 Deno.test("webhook name dodges the discord ban", () => {
