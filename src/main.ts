@@ -7,12 +7,13 @@ import { refreshMembers } from "./api/members.ts";
 import { refreshSystem } from "./api/system.ts";
 import { connectLive } from "./api/live.ts";
 import { memberRefreshMs } from "./config/constants.ts";
-import { discordToken } from "./config/env.ts";
+import { discordToken, ownerUserId } from "./config/env.ts";
 import { client } from "./discord/client.ts";
 import { proxyMessage } from "./discord/proxyMessage.ts";
 import { handleReaction } from "./discord/reactions.ts";
 import { notifyReply } from "./discord/replyNotice.ts";
 import { updateStatus } from "./discord/status.ts";
+import { markActive } from "./state/activity.ts";
 import { loadSettings } from "./state/settings.ts";
 
 client.once(Events.ClientReady, (ready) => {
@@ -21,6 +22,8 @@ client.once(Events.ClientReady, (ready) => {
 });
 
 client.on(Events.MessageCreate, (message) => {
+    if (message.author.id === ownerUserId) markActive(message.channelId);
+
     proxyMessage(message).catch((error) => {
         console.error("Proxy failed:", error);
     });
@@ -31,9 +34,15 @@ client.on(Events.MessageCreate, (message) => {
 });
 
 client.on(Events.MessageReactionAdd, (reaction, user) => {
+    if (user.id === ownerUserId) markActive(reaction.message.channelId);
+
     handleReaction(reaction, user).catch((error) => {
         console.error("Reaction failed:", error);
     });
+});
+
+client.on(Events.TypingStart, (typing) => {
+    if (typing.user.id === ownerUserId) markActive(typing.channel.id);
 });
 
 await loadSettings();

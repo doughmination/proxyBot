@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 
 import { ownerUserId } from "../config/env.ts";
+import { isActive } from "../state/activity.ts";
 import { client } from "./client.ts";
 import { isProxied } from "./ownership.ts";
 import { buildReplyCard } from "./replyCard.ts";
@@ -17,6 +18,9 @@ export async function notifyReply(message: Message): Promise<void> {
     if (!message.inGuild() || message.webhookId || message.author.bot) return;
     if (message.author.id === ownerUserId) return;
     if (message.reference?.type !== MessageReferenceType.Default) return;
+
+    // They're already in this channel and will see it
+    if (isActive(message.channelId)) return;
 
     const target = await message.fetchReference().catch(() => null);
     if (!target || !isProxied(target)) return;

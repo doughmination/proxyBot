@@ -8,6 +8,8 @@ export const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMessageReactions,
+        // Typing counts as being in chat, so reply DMs hold off
+        GatewayIntentBits.GuildMessageTyping,
     ],
     // Lets ❌ and ❓ work on messages sent before the bot last started
     partials: [
