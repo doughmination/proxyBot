@@ -3,7 +3,7 @@
 import type { Message } from "discord.js";
 
 const explainText = [
-    `This bot is created by, and for <@1464890289922641993> for faer plural system.`,
+    `This bot is created by, and for <@1464890289922641993>, for faer plural system.`,
     ``,
     `> How does it work?`,
     `The bot detects messages enclosed in specific tags associated with a profile, then replaces that message under a "pseudo-account" of that profile using Discord webhooks.`,
