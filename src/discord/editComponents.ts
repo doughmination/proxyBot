@@ -3,9 +3,14 @@
 // Discord's component type numbers; importing discord.js here would make tests need env access
 export const ComponentType = {
     ActionRow: 1,
+    Button: 2,
+    Section: 9,
     TextDisplay: 10,
+    Thumbnail: 11,
     MediaGallery: 12,
     File: 13,
+    Separator: 14,
+    Container: 17,
 } as const;
 
 // Loose JSON so the existing message's components can pass straight through

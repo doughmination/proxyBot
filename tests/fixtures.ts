@@ -12,6 +12,8 @@ export function member(
         name: id,
         display_name: null,
         pronouns: null,
+        color: null,
+        description: null,
         avatar_url: null,
         webhook_avatar_url: null,
         proxy_tags: [{ prefix, suffix }],
