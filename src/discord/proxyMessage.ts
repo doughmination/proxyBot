@@ -21,7 +21,7 @@ export async function proxyMessage(message: Message): Promise<void> {
     // Commands never get proxied
     if (await runCommand(message)) return;
 
-    const fronters = settings.autoproxy ? system.fronters : [];
+    const fronters = settings.autoproxy.enabled ? system.fronters : [];
     const match = pickProxy(system.members, fronters, message.content);
     if (!match) return;
     if (!match.content && message.attachments.size === 0) return;

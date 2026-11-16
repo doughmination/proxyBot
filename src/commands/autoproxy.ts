@@ -11,12 +11,12 @@ export async function autoproxyCommand(
     const [choice] = args;
 
     if (choice === "on" || choice === "off") {
-        settings.autoproxy = choice === "on";
+        settings.autoproxy.enabled = choice === "on";
         await saveSettings();
     } else if (choice !== undefined) {
         await message.reply("Use `d!autoproxy on` or `d!autoproxy off`.");
         return;
     }
 
-    await message.reply(`Autoproxy is **${settings.autoproxy ? "on" : "off"}**.`);
+    await message.reply(`Autoproxy is **${settings.autoproxy.enabled ? "on" : "off"}**.`);
 }
