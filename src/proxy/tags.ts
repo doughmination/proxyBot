@@ -1,24 +1,6 @@
-/* src/proxy.ts */
+/* src/proxy/tags.ts */
 
-export interface ProxyTag {
-    prefix: string | null;
-    suffix: string | null;
-}
-
-export interface Member {
-    id: string;
-    name: string;
-    display_name: string | null;
-    avatar_url: string | null;
-    webhook_avatar_url: string | null;
-    proxy_tags: ProxyTag[];
-    keep_proxy: boolean;
-}
-
-export interface ProxyMatch {
-    member: Member;
-    content: string;
-}
+import type { Member, ProxyMatch } from "./types.ts";
 
 // Longest tag wins, so "C1:" beats "C:"
 export function matchProxyTags(
@@ -46,7 +28,7 @@ export function matchProxyTags(
             );
 
             best = {
-                member,
+                members: [member],
                 content: member.keep_proxy ? content : inner.trim(),
             };
             bestLength = tagLength;
@@ -54,18 +36,4 @@ export function matchProxyTags(
     }
 
     return best;
-}
-
-// Custom status text is capped at 128 chars
-export function frontingStatus(fronters: Member[]): string {
-    if (fronters.length === 0) return "Nobody fronting";
-
-    const names = fronters.map((member) => member.display_name ?? member.name);
-    return `Fronting: ${names.join(", ")}`.slice(0, 128);
-}
-
-// Discord rejects webhook names over 80 chars or containing "discord"
-export function webhookName(member: Member): string {
-    const name = member.display_name ?? member.name;
-    return name.replace(/discord/gi, "dïscord").slice(0, 80);
 }
