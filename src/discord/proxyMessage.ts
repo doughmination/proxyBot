@@ -33,7 +33,7 @@ export async function proxyMessage(message: Message): Promise<void> {
         flags: MessageFlags.IsComponentsV2,
         components: layout.components,
         files: layout.files,
-        username: webhookName(match.members),
+        username: webhookName(match.members, system.tag),
         avatarURL: await avatarFor(webhook, match.members),
         threadId: message.channel.isThread() ? message.channel.id : undefined,
         // shortcut: only user pings pass through, add role checks if you need @role or @everyone

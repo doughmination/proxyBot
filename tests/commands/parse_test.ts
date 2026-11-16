@@ -8,7 +8,16 @@ Deno.test("parses name and args, case-insensitive", () => {
     assertEquals(parseCommand("D!AutoProxy  OFF"), {
         name: "autoproxy",
         args: ["off"],
+        rest: "OFF",
     });
+});
+
+Deno.test("rest keeps the original text for edits", () => {
+    assertEquals(parseCommand("d!edit  Hello  World")?.rest, "Hello  World");
+});
+
+Deno.test("no args gives an empty list", () => {
+    assertEquals(parseCommand("d!help")?.args, []);
 });
 
 Deno.test("plain messages are not commands", () => {

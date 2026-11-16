@@ -3,16 +3,29 @@
 import type { Message } from "discord.js";
 
 import { autoproxyCommand } from "./autoproxy.ts";
+import { editCommand } from "./edit.ts";
 import { parseCommand } from "./parse.ts";
 
-type CommandHandler = (message: Message, args: string[]) => Promise<void>;
+type CommandHandler = (
+    message: Message,
+    args: string[],
+    rest: string,
+) => Promise<void>;
+
+const helpText = [
+    "`d!edit <text>` edits the message you reply to, or your latest proxied message. `d!e` works too.",
+    "`d!autoproxy` shows the state, `d!autoproxy on|off` sets it. `d!ap` works too.",
+    "React ❌ to delete a proxied message, ❓ to see who sent it.",
+].join("\n");
 
 const commands: Record<string, CommandHandler> = {
+    edit: editCommand,
+    e: editCommand,
     autoproxy: autoproxyCommand,
     ap: autoproxyCommand,
-    help: (message) => message.reply(
-        "`d!autoproxy` shows the state, `d!autoproxy on|off` sets it. `d!ap` works too.",
-    ).then(() => {}),
+    help: async (message) => {
+        await message.reply(helpText);
+    },
 };
 
 // True when the message was a command, so it isn't proxied as well
@@ -26,6 +39,6 @@ export async function runCommand(message: Message): Promise<boolean> {
         return true;
     }
 
-    await handler(message, parsed.args);
+    await handler(message, parsed.args, parsed.rest);
     return true;
 }

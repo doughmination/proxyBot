@@ -3,7 +3,9 @@
 import { Buffer } from "node:buffer";
 import type { Webhook } from "discord.js";
 
+import { crowdAvatarUrl } from "../config/constants.ts";
 import { avatarOf, mergeAvatars } from "../images/merge.ts";
+import { maxNamedSpeakers } from "../proxy/names.ts";
 import type { Member } from "../proxy/types.ts";
 import { client } from "./client.ts";
 
@@ -21,6 +23,8 @@ export async function avatarFor(
     if (speakers.length === 1) {
         return avatarOf(speakers[0]) ?? botAvatar;
     }
+
+    if (speakers.length > maxNamedSpeakers) return crowdAvatarUrl;
 
     const key = speakers.map((member) => member.id).join(",");
     if (webhookAvatarKeys.get(webhook.id) === key) return undefined;
