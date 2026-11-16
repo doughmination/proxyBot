@@ -11,6 +11,7 @@ import { discordToken } from "./config/env.ts";
 import { client } from "./discord/client.ts";
 import { proxyMessage } from "./discord/proxyMessage.ts";
 import { handleReaction } from "./discord/reactions.ts";
+import { notifyReply } from "./discord/replyNotice.ts";
 import { updateStatus } from "./discord/status.ts";
 import { loadSettings } from "./state/settings.ts";
 
@@ -22,6 +23,10 @@ client.once(Events.ClientReady, (ready) => {
 client.on(Events.MessageCreate, (message) => {
     proxyMessage(message).catch((error) => {
         console.error("Proxy failed:", error);
+    });
+
+    notifyReply(message).catch((error) => {
+        console.error("Reply notice failed:", error);
     });
 });
 

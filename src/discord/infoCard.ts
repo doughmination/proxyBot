@@ -6,12 +6,12 @@ import { ComponentType } from "./editComponents.ts";
 
 // Same values the system site uses for its member pages and Discord embeds
 const siteUrl = "https://doughmination.co.uk";
-const accentColour = 0xeb459e;
+export const accentColour = 0xeb459e;
 const maxDescription = 1000;
 const linkButtonStyle = 5;
 
 // deno-lint-ignore no-explicit-any
-type ComponentJson = Record<string, any>;
+export type ComponentJson = Record<string, any>;
 
 export interface InfoCardInput {
     members: Member[] | undefined;
@@ -32,13 +32,13 @@ function colourOf(color: string | null): number {
     return /^[0-9a-fA-F]{6}$/.test(full) ? parseInt(full, 16) : accentColour;
 }
 
-function shorten(text: string): string {
+export function shorten(text: string): string {
     return text.length > maxDescription
         ? `${text.slice(0, maxDescription - 1)}…`
         : text;
 }
 
-function linkButton(label: string, url: string): ComponentJson {
+export function linkButton(label: string, url: string): ComponentJson {
     return {
         type: ComponentType.Button,
         style: linkButtonStyle,
@@ -48,7 +48,7 @@ function linkButton(label: string, url: string): ComponentJson {
 }
 
 // A Section needs an accessory, so members without an avatar get plain text
-function header(text: string, avatarUrl: string | null): ComponentJson {
+export function header(text: string, avatarUrl: string | null): ComponentJson {
     const display = {
         type: ComponentType.TextDisplay,
         content: text,
