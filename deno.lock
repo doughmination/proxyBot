@@ -4,7 +4,8 @@
     "jsr:@std/assert@^1.0.19": "1.0.19",
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "npm:discord.js@^14.28.1": "14.28.1",
-    "npm:imagescript@3.20.3": "3.20.3"
+    "npm:imagescript@3.20.3": "3.20.3",
+    "npm:jpcl-lang@^1.1.1": "1.1.1"
   },
   "jsr": {
     "@std/assert@1.0.19": {
@@ -131,6 +132,10 @@
     "imagescript@3.20.3": {
       "integrity": "sha512-CtztzjiEPnaQDUR+Nk5OJT6lKsYRCGsIEdXKSmbEh/KJuBntjx/IDBRu4wuYf/2V3FRIJ9DUxCRLsf0mkJW2XQ=="
     },
+    "jpcl-lang@1.1.1": {
+      "integrity": "sha512-WyED4bjuNuWr+oKi0+3iIY2EinGk/VsZj4AP4XY8PrvPhzCL3aSBJSZcZ5pDz2Myf+JW8AN5omEIjSyjGMupIQ==",
+      "bin": true
+    },
     "lodash.snakecase@4.1.1": {
       "integrity": "sha512-QZ1d4xoBHYUeuouhEq3lk3Uq7ldgyFXGBhg04+oRLnIz8o9T65Eh+8YdroUwn846zchkA9yDsDl5CVVaV2nqYw=="
     },
@@ -160,7 +165,8 @@
     "dependencies": [
       "jsr:@std/assert@^1.0.19",
       "npm:discord.js@^14.28.1",
-      "npm:imagescript@3.20.3"
+      "npm:imagescript@3.20.3",
+      "npm:jpcl-lang@^1.1.1"
     ]
   }
 }
