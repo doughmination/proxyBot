@@ -17,4 +17,8 @@ export const client = new Client({
         Partials.Reaction,
         Partials.User,
     ],
+    // Command replies shouldn't ping whoever ran the command
+    allowedMentions: {
+        repliedUser: false,
+    },
 });
