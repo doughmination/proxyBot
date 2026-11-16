@@ -4,6 +4,7 @@ import type { Message } from "discord.js";
 
 import { autoproxyCommand } from "./autoproxy.ts";
 import { editCommand } from "./edit.ts";
+import { explainCommand } from "./explain.ts";
 import { parseCommand } from "./parse.ts";
 
 type CommandHandler = (
@@ -21,6 +22,8 @@ const helpText = [
 const commands: Record<string, CommandHandler> = {
     edit: editCommand,
     e: editCommand,
+    ex: explainCommand,
+    explain: explainCommand,
     autoproxy: autoproxyCommand,
     ap: autoproxyCommand,
     help: async (message) => {
