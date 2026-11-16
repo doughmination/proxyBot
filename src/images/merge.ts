@@ -21,15 +21,19 @@ export async function mergeAvatars(members: Member[]): Promise<Uint8Array | null
     const stripWidth = Math.floor(size / urls.length);
     const canvas = new Image(size, size);
 
-    for (const [index, url] of urls.entries()) {
+    // Download all at once; the strips are still placed in front order
+    const images = await Promise.all(urls.map(async (url) => {
         const response = await fetch(url);
         if (!response.ok) throw new Error(`Avatar ${url}: HTTP ${response.status}`);
 
-        const decoded = await Image.decode(new Uint8Array(await response.arrayBuffer()));
+        return await Image.decode(new Uint8Array(await response.arrayBuffer()));
+    }));
+
+    for (const [index, decoded] of images.entries()) {
         if (!(decoded instanceof Image)) continue;
 
         // Last strip takes the rounding remainder so there's no gap on the right
-        const width = index === urls.length - 1
+        const width = index === images.length - 1
             ? size - stripWidth * index
             : stripWidth;
 

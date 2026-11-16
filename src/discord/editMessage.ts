@@ -2,6 +2,7 @@
 
 import {
     type APIMessageTopLevelComponent,
+    MessageFlags,
     MessageReferenceType,
     type Message,
 } from "discord.js";
@@ -19,6 +20,15 @@ async function findTarget(command: Message): Promise<Message | null> {
         const replied = await command.fetchReference().catch(() => null);
         return replied && isProxied(replied) ? replied : null;
     }
+
+    // The gateway already cached recent messages; only ask Discord when that misses
+    const cached = command.channel.messages.cache
+        .filter((message) =>
+            BigInt(message.id) < BigInt(command.id) && isProxied(message)
+        )
+        .sort((first, second) => (BigInt(second.id) > BigInt(first.id) ? 1 : -1))
+        .first();
+    if (cached) return cached;
 
     const recent = await command.channel.messages.fetch({
         limit: searchDepth,
@@ -47,6 +57,25 @@ export async function editProxied(
         ? channelWebhook
         : await client.fetchWebhook(target.webhookId);
 
+    const threadId = command.channel.isThread() ? command.channel.id : undefined;
+
+    // Link messages were sent classic; the flag can't be added or removed later
+    if (!target.flags.has(MessageFlags.IsComponentsV2)) {
+        if (text.length > 2000) {
+            return "Messages with links can only be 2000 characters long.";
+        }
+
+        await webhook.editMessage(target.id, {
+            content: text,
+            threadId,
+            allowedMentions: {
+                parse: ["users"],
+            },
+        });
+
+        return null;
+    }
+
     await webhook.editMessage(target.id, {
         components: replaceText(
             target.components.map((component) => component.toJSON()),
@@ -55,7 +84,7 @@ export async function editProxied(
         ) as APIMessageTopLevelComponent[],
         // Passing them back is what keeps them; leaving this out would drop them
         attachments: [...target.attachments.values()],
-        threadId: command.channel.isThread() ? command.channel.id : undefined,
+        threadId,
         allowedMentions: {
             parse: ["users"],
         },

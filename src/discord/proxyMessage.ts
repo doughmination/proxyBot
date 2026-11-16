@@ -10,6 +10,8 @@ import { settings } from "../state/settings.ts";
 import { system } from "../state/system.ts";
 import { avatarFor } from "./avatar.ts";
 import { buildLayout } from "./layout.ts";
+import { wantsLinkPreview } from "./linkPreview.ts";
+import { rememberSenders } from "./senders.ts";
 import { getWebhook } from "./webhooks.ts";
 
 export async function proxyMessage(message: Message): Promise<void> {
@@ -27,20 +29,29 @@ export async function proxyMessage(message: Message): Promise<void> {
     const webhook = await getWebhook(message);
     if (!webhook) return;
 
-    const layout = await buildLayout(message, match.content);
+    const classic = wantsLinkPreview(match.content);
 
-    await webhook.send({
-        flags: MessageFlags.IsComponentsV2,
+    // Reply lookup and avatar merge don't depend on each other
+    const [layout, avatarURL] = await Promise.all([
+        buildLayout(message, match.content, classic),
+        avatarFor(webhook, match.members),
+    ]);
+
+    const sent = await webhook.send({
+        flags: classic ? undefined : MessageFlags.IsComponentsV2,
+        content: classic ? match.content : undefined,
         components: layout.components,
         files: layout.files,
         username: webhookName(match.members, system.tag),
-        avatarURL: await avatarFor(webhook, match.members),
+        avatarURL,
         threadId: message.channel.isThread() ? message.channel.id : undefined,
         // shortcut: only user pings pass through, add role checks if you need @role or @everyone
         allowedMentions: {
             parse: ["users"],
         },
     });
+
+    rememberSenders(sent.id, match.members);
 
     // Delete only after the proxied copy is sent, so nothing is lost
     await message.delete();

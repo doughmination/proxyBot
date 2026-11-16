@@ -40,16 +40,18 @@ async function replyButton(message: Message): Promise<ButtonBuilder | null> {
         .setURL(original.url);
 }
 
-// Components v2 only shows attachments that a component points at
+// Components v2 only shows attachments that a component points at.
+// Classic: the text goes in content and files show as plain attachments
 export async function buildLayout(
     message: Message,
     content: string,
+    classic: boolean,
 ): Promise<Layout> {
     const components: TopLevelComponent[] = [];
     const files: AttachmentPayload[] = [];
     const button = await replyButton(message);
 
-    if (content) {
+    if (content && !classic) {
         components.push(new TextDisplayBuilder().setContent(content));
     }
 
@@ -69,10 +71,13 @@ export async function buildLayout(
         const name = `${index}-${attachment.name.replace(/[^\w.-]/g, "_")}`;
         const type = attachment.contentType ?? "";
 
+        // Classic attachments carry the spoiler in the filename instead
         files.push({
             attachment: attachment.url,
-            name,
+            name: classic && attachment.spoiler ? `SPOILER_${name}` : name,
         });
+
+        if (classic) continue;
 
         if (type.startsWith("image/") || type.startsWith("video/")) {
             gallery.addItems(

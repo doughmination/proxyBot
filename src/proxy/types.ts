@@ -9,6 +9,7 @@ export interface Member {
     id: string;
     name: string;
     display_name: string | null;
+    pronouns: string | null;
     avatar_url: string | null;
     webhook_avatar_url: string | null;
     proxy_tags: ProxyTag[];

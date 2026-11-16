@@ -8,11 +8,33 @@ import type {
 } from "discord.js";
 
 import { ownerUserId } from "../config/env.ts";
+import type { Member } from "../proxy/types.ts";
 import { system } from "../state/system.ts";
 import { isProxied } from "./ownership.ts";
+import { sendersOf } from "./senders.ts";
 
 const deleteEmoji = "❌";
 const infoEmoji = "❓";
+
+function memberLine(member: Member): string {
+    const pronouns = member.pronouns ? ` (${member.pronouns})` : "";
+    return `**${member.display_name ?? member.name}**${pronouns}`;
+}
+
+// One line per member when known, else the webhook name it was sent under
+function senderInfo(
+    messageId: string,
+    username: string,
+    url: string,
+): string {
+    const members = sendersOf(messageId);
+    const lines = members ? members.map(memberLine) : [`**${username}**`];
+
+    if (system.name) lines.push(`System: **${system.name}**`);
+    lines.push(`Sent by <@${ownerUserId}>`, url);
+
+    return lines.join("\n");
+}
 
 export async function handleReaction(
     partialReaction: MessageReaction | PartialMessageReaction,
@@ -38,12 +60,9 @@ export async function handleReaction(
         return;
     }
 
-    const systemLine = system.name ? ` of **${system.name}**` : "";
-
     // DMs can be closed; the info just doesn't arrive then
-    await user.send(
-        `**${message.author.username}**${systemLine}\nSent by <@${ownerUserId}>\n${message.url}`,
-    ).catch(() => {});
+    await user.send(senderInfo(message.id, message.author.username, message.url))
+        .catch(() => {});
 
     await reaction.users.remove(user.id).catch(() => {});
 }
