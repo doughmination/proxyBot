@@ -13,12 +13,13 @@ export async function autoproxyCommand(
     message: Message,
     args: string[],
 ): Promise<void> {
-    if (args[0] === "-g") {
-        await globalAutoproxy(message, args[1]);
+    // -g can go anywhere, so "-g on" and "on -g" both work
+    const [choice] = args.filter((arg) => arg !== "-g");
+
+    if (args.includes("-g")) {
+        await globalAutoproxy(message, choice);
         return;
     }
-
-    const [choice] = args;
 
     // Commands only run from server messages, so guildId is always set
     const autoproxy = guildSettings(message.guildId!).autoproxy;
