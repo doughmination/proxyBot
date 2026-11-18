@@ -6,7 +6,7 @@ import { runCommand } from "../commands/index.ts";
 import { ownerUserId } from "../config/env.ts";
 import { pickProxy } from "../proxy/autoproxy.ts";
 import { webhookName } from "../proxy/names.ts";
-import { settings } from "../state/settings.ts";
+import { guildSettings } from "../state/settings.ts";
 import { system } from "../state/system.ts";
 import { avatarFor } from "./avatar.ts";
 import { buildLayout } from "./layout.ts";
@@ -21,7 +21,7 @@ export async function proxyMessage(message: Message): Promise<void> {
     // Commands never get proxied
     if (await runCommand(message)) return;
 
-    const fronters = settings.autoproxy.enabled ? system.fronters : [];
+    const fronters = guildSettings(message.guildId).autoproxy.enabled ? system.fronters : [];
     const match = pickProxy(system.members, fronters, message.content);
     if (!match) return;
     if (!match.content && message.attachments.size === 0) return;

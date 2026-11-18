@@ -14,11 +14,35 @@ import { handleReaction } from "./discord/reactions.ts";
 import { notifyReply } from "./discord/replyNotice.ts";
 import { updateStatus } from "./discord/status.ts";
 import { markActive } from "./state/activity.ts";
-import { loadSettings } from "./state/settings.ts";
+import {
+    addGuild,
+    loadSettings,
+    removeGuild,
+    syncGuilds,
+} from "./state/settings.ts";
 
 client.once(Events.ClientReady, (ready) => {
     console.log(`Logged in as ${ready.user.tag}`);
     updateStatus();
+
+    syncGuilds(ready.guilds.cache.keys()).catch((error) => {
+        console.error("Guild sync failed:", error);
+    });
+});
+
+client.on(Events.GuildCreate, (guild) => {
+    addGuild(guild.id).catch((error) => {
+        console.error("Guild add failed:", error);
+    });
+});
+
+client.on(Events.GuildDelete, (guild) => {
+    // An outage also fires this; only a real leave or kick drops the settings
+    if (!guild.available) return;
+
+    removeGuild(guild.id).catch((error) => {
+        console.error("Guild remove failed:", error);
+    });
 });
 
 client.on(Events.MessageCreate, (message) => {

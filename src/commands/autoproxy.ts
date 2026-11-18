@@ -2,7 +2,7 @@
 
 import type { Message } from "discord.js";
 
-import { saveSettings, settings } from "../state/settings.ts";
+import { guildSettings, saveSettings } from "../state/settings.ts";
 
 export async function autoproxyCommand(
     message: Message,
@@ -10,13 +10,16 @@ export async function autoproxyCommand(
 ): Promise<void> {
     const [choice] = args;
 
+    // Commands only run from server messages, so guildId is always set
+    const autoproxy = guildSettings(message.guildId!).autoproxy;
+
     if (choice === "on" || choice === "off") {
-        settings.autoproxy.enabled = choice === "on";
+        autoproxy.enabled = choice === "on";
         await saveSettings();
     } else if (choice !== undefined) {
         await message.reply("Use `d!autoproxy on` or `d!autoproxy off`.");
         return;
     }
 
-    await message.reply(`Autoproxy is **${settings.autoproxy.enabled ? "on" : "off"}**.`);
+    await message.reply(`Autoproxy in this server is **${autoproxy.enabled ? "on" : "off"}**.`);
 }
