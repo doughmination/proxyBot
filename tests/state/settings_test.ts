@@ -2,7 +2,25 @@
 
 import { assertEquals } from "@std/assert";
 
-import { guildSettings, settings } from "../../src/state/settings.ts";
+import {
+    guildSettings,
+    setAutoproxyEverywhere,
+    settings,
+} from "../../src/state/settings.ts";
+
+Deno.test("setAutoproxyEverywhere changes every server", () => {
+    guildSettings("1").autoproxy.enabled = true;
+    guildSettings("2");
+
+    assertEquals(setAutoproxyEverywhere(false), 2);
+    assertEquals(guildSettings("1").autoproxy.enabled, false);
+
+    assertEquals(setAutoproxyEverywhere(true), 2);
+    assertEquals(guildSettings("2").autoproxy.enabled, true);
+
+    delete settings["1"];
+    delete settings["2"];
+});
 
 Deno.test("autoproxy is per server and off by default", () => {
     guildSettings("1").autoproxy.enabled = true;

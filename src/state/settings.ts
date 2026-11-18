@@ -57,6 +57,13 @@ export async function syncGuilds(guildIds: Iterable<string>): Promise<void> {
     if (changed) await saveSettings();
 }
 
+// Every server the bot is in has an entry, via syncGuilds and addGuild
+export function setAutoproxyEverywhere(enabled: boolean): number {
+    const guilds = Object.values(settings);
+    for (const guild of guilds) guild.autoproxy.enabled = enabled;
+    return guilds.length;
+}
+
 export async function addGuild(guildId: string): Promise<void> {
     guildSettings(guildId);
     await saveSettings();
