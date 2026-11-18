@@ -21,6 +21,7 @@ export async function proxyMessage(message: Message): Promise<void> {
     // Commands never get proxied
     if (await runCommand(message)) return;
 
+    const started = performance.now();
     const fronters = guildSettings(message.guildId).autoproxy.enabled ? system.fronters : [];
     const match = pickProxy(system.members, fronters, message.content);
     if (!match) return;
@@ -37,6 +38,7 @@ export async function proxyMessage(message: Message): Promise<void> {
         avatarFor(webhook, match.members),
     ]);
 
+    const sendStarted = performance.now();
     const sent = await webhook.send({
         flags: classic ? undefined : MessageFlags.IsComponentsV2,
         content: classic ? match.content : undefined,
@@ -51,8 +53,13 @@ export async function proxyMessage(message: Message): Promise<void> {
         },
     });
 
+    const sendMs = Math.round(performance.now() - sendStarted);
     rememberSenders(sent.id, match.members);
 
     // Delete only after the proxied copy is sent, so nothing is lost
     await message.delete();
+
+    // Shows where the time goes: Discord's round trips, or our own work
+    const totalMs = Math.round(performance.now() - started);
+    console.log(`Proxied in ${totalMs}ms (send ${sendMs}ms)`);
 }

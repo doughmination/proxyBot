@@ -1,6 +1,7 @@
 /* src/api/fronters.ts */
 
 import { apiBase } from "../config/constants.ts";
+import { premergeAvatar } from "../discord/avatar.ts";
 import { updateStatus } from "../discord/status.ts";
 import type { Member } from "../proxy/types.ts";
 import { system } from "../state/system.ts";
@@ -8,6 +9,7 @@ import { system } from "../state/system.ts";
 export function setFronters(fronters: Member[]): void {
     system.fronters = fronters;
     updateStatus();
+    premergeAvatar(fronters);
 }
 
 export async function fetchFronters(): Promise<void> {
