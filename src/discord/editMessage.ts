@@ -12,10 +12,10 @@ import { replaceText } from "./editComponents.ts";
 import { isProxied } from "./ownership.ts";
 import { getWebhook } from "./webhooks.ts";
 
-const searchDepth = 50;
+export const searchDepth = 50;
 
 // The replied-to message if there is one, otherwise the newest proxied message here
-async function findTarget(command: Message): Promise<Message | null> {
+export async function findTarget(command: Message): Promise<Message | null> {
     if (command.reference?.type === MessageReferenceType.Default) {
         const replied = await command.fetchReference().catch(() => null);
         return replied && isProxied(replied) ? replied : null;

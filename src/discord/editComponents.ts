@@ -55,16 +55,25 @@ function rewriteMedia(
     return component;
 }
 
+// Points media back at the attachments, so the components can be sent again
+export function keepMedia(
+    components: ComponentJson[],
+    attachmentNames: string[],
+): ComponentJson[] {
+    const names = new Set(attachmentNames);
+    return components.map((component) => rewriteMedia(component, names));
+}
+
 // Swaps the text block for new text, keeping buttons and attachments as they were
 export function replaceText(
     components: ComponentJson[],
     text: string,
     attachmentNames: string[],
 ): ComponentJson[] {
-    const names = new Set(attachmentNames);
-    const kept = components
-        .filter((component) => component.type !== ComponentType.TextDisplay)
-        .map((component) => rewriteMedia(component, names));
+    const kept = keepMedia(
+        components.filter((component) => component.type !== ComponentType.TextDisplay),
+        attachmentNames,
+    );
 
     if (!text) return kept;
 

@@ -7,6 +7,7 @@ import { editCommand } from "./edit.ts";
 import { explainCommand } from "./explain.ts";
 import { helpCommand } from "./help.ts";
 import { parseCommand } from "./parse.ts";
+import { reproxyCommand } from "./reproxy.ts";
 
 type CommandHandler = (
     message: Message,
@@ -21,6 +22,8 @@ const commands: Record<string, CommandHandler> = {
     explain: explainCommand,
     autoproxy: autoproxyCommand,
     ap: autoproxyCommand,
+    reproxy: reproxyCommand,
+    rp: reproxyCommand,
     help: helpCommand
 };
 

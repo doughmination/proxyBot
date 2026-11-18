@@ -32,6 +32,29 @@ export function webhookName(members: Member[], tag: string | null): string {
         .slice(0, webhookNameLimit);
 }
 
+// Matches the short name, like "c1", not the display name; case doesn't matter
+export function membersByName(
+    members: Member[],
+    names: string[],
+): { found: Member[]; missing: string[] } {
+    const found: Member[] = [];
+    const missing: string[] = [];
+
+    for (const name of names) {
+        const match = members.find(
+            (member) => member.name.toLowerCase() === name.toLowerCase(),
+        );
+
+        if (match) found.push(match);
+        else missing.push(name);
+    }
+
+    return {
+        found,
+        missing,
+    };
+}
+
 // Custom status text is capped at 128 chars
 export function frontingStatus(fronters: Member[]): string {
     if (fronters.length === 0) return "Nobody fronting";

@@ -2,7 +2,11 @@
 
 import { assertEquals } from "@std/assert";
 
-import { frontingStatus, webhookName } from "../../src/proxy/names.ts";
+import {
+    frontingStatus,
+    membersByName,
+    webhookName,
+} from "../../src/proxy/names.ts";
 import { member } from "../fixtures.ts";
 
 const host = {
@@ -52,4 +56,19 @@ Deno.test("fronting status lists display names", () => {
         "Fronting: Clove (Host), 02",
     );
     assertEquals(frontingStatus([]), "Nobody fronting");
+});
+
+Deno.test("membersByName matches short names, not display names", () => {
+    const named = {
+        ...host,
+        name: "C1",
+    };
+
+    assertEquals(
+        membersByName([named, member("02")], ["c1", "02", "clove (host)"]),
+        {
+            found: [named, member("02")],
+            missing: ["clove (host)"],
+        },
+    );
 });
