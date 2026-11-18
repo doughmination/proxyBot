@@ -8,6 +8,7 @@ import { explainCommand } from "./explain.ts";
 import { helpCommand } from "./help.ts";
 import { parseCommand } from "./parse.ts";
 import { reproxyCommand } from "./reproxy.ts";
+import { switchCommand } from "./switch.ts";
 
 type CommandHandler = (
     message: Message,
@@ -24,6 +25,8 @@ const commands: Record<string, CommandHandler> = {
     ap: autoproxyCommand,
     reproxy: reproxyCommand,
     rp: reproxyCommand,
+    switch: switchCommand,
+    sw: switchCommand,
     help: helpCommand
 };
 
