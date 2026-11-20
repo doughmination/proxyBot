@@ -8,6 +8,7 @@ import { explainCommand } from "./explain.ts";
 import { helpCommand } from "./help.ts";
 import { memberCommand } from "./member.ts";
 import { parseCommand } from "./parse.ts";
+import { pingCommand } from "./ping.ts";
 import { reproxyCommand } from "./reproxy.ts";
 import { switchCommand } from "./switch.ts";
 
@@ -30,6 +31,7 @@ const commands: Record<string, CommandHandler> = {
     sw: switchCommand,
     member: memberCommand,
     m: memberCommand,
+    ping: pingCommand,
     help: helpCommand
 };
 
