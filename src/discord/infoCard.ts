@@ -69,7 +69,7 @@ export function header(text: string, avatarUrl: string | null): ComponentJson {
 }
 
 // Mirrors the site's member page: name, pronouns, status, then about, tags, pride
-function memberCard(member: Member): ComponentJson {
+export function memberCard(member: Member): ComponentJson {
     const top = [`## ${member.display_name || member.name}`];
     if (member.pronouns) top.push(member.pronouns);
     if (member.status) {

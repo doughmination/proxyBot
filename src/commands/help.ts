@@ -8,6 +8,7 @@ const helpText = [
     "`d$autoproxy` shows the state for this server, `d$autoproxy on|off` sets it. Add `-g` for every server, like `d$autoproxy -g off`. `d$ap` works too.",
     "`d$reproxy <member>` resends the message you reply to, or your latest proxied message, as someone else, like `d$reproxy c1`. `d$rp` works too.",
     "`d$switch <member>` sets who's fronting on the site, like `d$switch c1 c2`. `d$switch out` clears it. `d$sw` works too.",
+    "`d$member <member>` shows a member's card, like `d$member aether`. `d$m` works too.",
     "-# React ❌ to delete a proxied message, ❓ to see who sent it.",
 ].join("\n");
 

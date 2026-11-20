@@ -6,6 +6,7 @@ import { autoproxyCommand } from "./autoproxy.ts";
 import { editCommand } from "./edit.ts";
 import { explainCommand } from "./explain.ts";
 import { helpCommand } from "./help.ts";
+import { memberCommand } from "./member.ts";
 import { parseCommand } from "./parse.ts";
 import { reproxyCommand } from "./reproxy.ts";
 import { switchCommand } from "./switch.ts";
@@ -27,6 +28,8 @@ const commands: Record<string, CommandHandler> = {
     rp: reproxyCommand,
     switch: switchCommand,
     sw: switchCommand,
+    member: memberCommand,
+    m: memberCommand,
     help: helpCommand
 };
 
