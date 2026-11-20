@@ -29,3 +29,11 @@ Deno.test("prefix and suffix match", () => {
 Deno.test("no tag means no match", () => {
     assertEquals(matchProxyTags(members, "plain message"), null);
 });
+
+Deno.test("tags ignore case and the kind of space", () => {
+    const spaced = [member("aether", "Ae ")];
+
+    assertEquals(matchProxyTags(spaced, "ae hi")?.content, "hi");
+    assertEquals(matchProxyTags(spaced, "Ae hi")?.content, "hi");
+    assertEquals(matchProxyTags(spaced, "Aehi"), null);
+});

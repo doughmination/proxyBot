@@ -2,6 +2,13 @@
 
 import type { Member, ProxyMatch } from "./types.ts";
 
+// Case is ignored, and any whitespace matches any whitespace, so "ae hi" and a non-breaking space still hit "Ae "
+function tagPattern(tag: string): string {
+    return tag
+        .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+        .replace(/\s+/g, "\\s+");
+}
+
 // Longest tag wins, so "C1:" beats "C:"
 export function matchProxyTags(
     members: Member[],
@@ -18,18 +25,17 @@ export function matchProxyTags(
 
             if (tagLength === 0) continue;
             if (tagLength <= bestLength) continue;
-            if (content.length < tagLength) continue;
-            if (!content.startsWith(prefix)) continue;
-            if (!content.endsWith(suffix)) continue;
 
-            const inner = content.slice(
-                prefix.length,
-                content.length - suffix.length,
-            );
+            const found = new RegExp(
+                `^${tagPattern(prefix)}([\\s\\S]*?)${tagPattern(suffix)}$`,
+                "iu",
+            ).exec(content);
+
+            if (!found) continue;
 
             best = {
                 members: [member],
-                content: member.keep_proxy ? content : inner.trim(),
+                content: member.keep_proxy ? content : found[1].trim(),
             };
             bestLength = tagLength;
         }

@@ -3,6 +3,7 @@
 import { pingMs, reconnectMs, socketUrl } from "../config/constants.ts";
 import type { Member } from "../proxy/types.ts";
 import { fetchFronters, setFronters } from "./fronters.ts";
+import { refreshMembers } from "./members.ts";
 
 interface LiveEvent {
     type?: string;
@@ -22,6 +23,11 @@ function receive(raw: string): void {
 
     if (event.type === "fronters_update" && event.data?.members) {
         setFronters(event.data.members);
+    }
+
+    // The site sends this after any member edit, so tags and avatars apply at once
+    if (event.type === "members_update" || event.type === "force_refresh") {
+        refreshMembers();
     }
 }
 
