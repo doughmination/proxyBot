@@ -31,7 +31,7 @@ export async function autoproxyCommand(
     }
 
     if (choice !== "on" && choice !== "off") {
-        await message.reply("Use `d!autoproxy on|off`, or `d!autoproxy -g on|off` for every server.");
+        await message.reply("Use `d$autoproxy on|off`, or `d$autoproxy -g on|off` for every server.");
         return;
     }
 
@@ -57,7 +57,7 @@ async function globalAutoproxy(
     }
 
     if (choice !== "on" && choice !== "off") {
-        await message.reply("Use `d!autoproxy -g on` or `d!autoproxy -g off`.");
+        await message.reply("Use `d$autoproxy -g on` or `d$autoproxy -g off`.");
         return;
     }
 

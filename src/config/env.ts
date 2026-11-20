@@ -10,5 +10,5 @@ if (!token || !ownerId) {
 export const discordToken: string = token;
 export const ownerUserId: string = ownerId;
 
-// Optional: without it everything works except d!switch
+// Optional: without it everything works except d$switch
 export const siteToken: string | undefined = Deno.env.get("SITE_TOKEN");

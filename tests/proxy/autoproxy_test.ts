@@ -35,6 +35,10 @@ Deno.test("backslash skips autoproxy", () => {
     assertEquals(pickProxy([], [host], "\\not proxied"), null);
 });
 
+Deno.test("dollar sign skips tags and autoproxy", () => {
+    assertEquals(pickProxy([host], [host], "$not proxied"), null);
+});
+
 Deno.test("nobody fronting means no proxy", () => {
     assertEquals(pickProxy([], [], "hi"), null);
 });

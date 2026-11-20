@@ -11,7 +11,7 @@ export async function switchCommand(
     args: string[],
 ): Promise<void> {
     if (args.length === 0) {
-        await message.reply("Use `d!switch <member>`, like `d!switch c1`, several like `d!sw c1 c2`, or `d!sw out`.");
+        await message.reply("Use `d$switch <member>`, like `d$switch c1`, several like `d$sw c1 c2`, or `d$sw out`.");
         return;
     }
 

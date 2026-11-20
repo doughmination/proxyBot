@@ -11,7 +11,7 @@ export async function reproxyCommand(
     args: string[],
 ): Promise<void> {
     if (args.length === 0) {
-        await message.reply("Use `d!reproxy <member>`, like `d!reproxy c1`. Several work too: `d!rp c1 c2`.");
+        await message.reply("Use `d$reproxy <member>`, like `d$reproxy c1`. Several work too: `d$rp c1 c2`.");
         return;
     }
 

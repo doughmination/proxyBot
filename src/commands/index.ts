@@ -37,7 +37,7 @@ export async function runCommand(message: Message): Promise<boolean> {
 
     const handler = commands[parsed.name];
     if (!handler) {
-        await message.reply(`Unknown command \`${parsed.name}\`. Try \`d!help\`.`);
+        await message.reply(`Unknown command \`${parsed.name}\`. Try \`d$help\`.`);
         return true;
     }
 
